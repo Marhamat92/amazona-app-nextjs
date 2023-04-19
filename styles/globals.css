@@ -25,3 +25,18 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
+.card {
+  @apply bg-white shadow-lg rounded-lg overflow-hidden border mb-5 border-gray-200;
+}
+
+.card:hover {
+  @apply shadow-xl;
+}
+
+.primary-button {
+  @apply bg-amber-500 text-white font-bold py-2 px-4 rounded shadow outline-none hover:bg-amber-400 active:bg-amber-500 transition-all duration-300 ease-in-out;
+}
+
+
