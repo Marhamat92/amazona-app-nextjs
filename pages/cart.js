@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react'
 import { AiOutlineDelete } from "react-icons/ai";
+import dynamic from 'next/dynamic';
 
 
 function cart() {
@@ -14,6 +15,11 @@ function cart() {
 
   const removeItemHandler = (item) => {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+  }
+
+  const updateCartHandler = (item, qty) => {
+    const quantity = Number(qty)
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...item, quantity } })
   }
 
 
@@ -30,7 +36,7 @@ function cart() {
           )
           :
           (
-            <div className='grid mb:grid-cols-4 md:gap-5' >
+            <div className='grid md:grid-cols-4 md:gap-5' >
               <div className='overflow-x-auto md:col-span-3'>
                 <table className='min-w-full'>
                   <thead className='border-b'>
@@ -54,7 +60,18 @@ function cart() {
                             </Link>
                           </td>
                           <td className='p-5 text-right'>
-                            {item.quantity}
+                            <select
+                              value={item.quantity}
+                              onChange={(e) => updateCartHandler(item, e.target.value)}
+                            >
+                              {
+                                [...Array(item.countInStock).keys()].map((x) => (
+                                  <option value={x + 1} key={x + 1} >
+                                    {x + 1}
+                                  </option>
+                                ))
+                              }
+                            </select>
                           </td>
                           <td className='p-5 text-right'>
                             {item.price}
@@ -70,10 +87,10 @@ function cart() {
                   </tbody>
                 </table>
               </div>
-              <div className='card p-5'>
+              <div className='card p-5 md:col-span-1'>
                 <ul>
                   <li>
-                    <div className='pb-3'>
+                    <div className='pb-3 text-xl'>
                       Subtotal ( {cartItems.reduce((a, c) => a + c.quantity, 0)} ) : $
                       {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                     </div>
@@ -94,4 +111,4 @@ function cart() {
   )
 }
 
-export default cart
+export default dynamic(() => Promise.resolve(cart), { ssr: false })
