@@ -14,6 +14,7 @@ function ProductScreen() {
   const { state, dispatch } = useContext(Store)
 
   const { query } = useRouter();
+  const router = useRouter()
   const { slug } = query;
 
   const product = data.products.find((x) => x.slug === slug)
@@ -44,6 +45,7 @@ function ProductScreen() {
         type: 'CART_ADD_ITEM', payload: { ...product, quantity }
       })
       notifySuccess()
+      // router.push("/cart")  with router push we can go to cart page when item added to cart
     }
 
   }
