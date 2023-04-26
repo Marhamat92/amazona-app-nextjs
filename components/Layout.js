@@ -1,11 +1,14 @@
 import { Store } from '@/utils/Store'
+import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useContext, useEffect, useState } from 'react'
+import { ToastContainer } from 'react-toastify'
 
 
 function Layout({ children, title }) {
 
+  const { status, data: session } = useSession();
   const { state, dispatch } = useContext(Store)
   const { cart } = state;
 
@@ -21,6 +24,9 @@ function Layout({ children, title }) {
         <title>{title ? title + '-Amazona' : 'Amazona'}</title>
         <meta name="description" content=" Amazona Next App" />
       </Head>
+
+      <ToastContainer position='bottom-center' limit={1} />
+
       <div className='flex min-h-screen flex-col justify-between'>
         <header>
           <nav className='flex h-12 justify-between shadow-md px-4 items-center'>
@@ -38,9 +44,17 @@ function Layout({ children, title }) {
                   }
                 </p>
               </Link>
-              <Link href="/signin">
-                <p >Sign In</p>
-              </Link>
+              <div className='ml-2'>
+                {status === 'loading' ? ('Loading...') :
+                  session?.user ? (session.user.name) :
+                    (
+                      <Link href="/login">
+                        <p >Sign In</p>
+                      </Link>
+                    )}
+
+              </div>
+
             </div>
           </nav>
         </header>
